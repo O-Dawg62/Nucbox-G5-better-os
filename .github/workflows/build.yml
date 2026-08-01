@@ -1,5 +1,4 @@
 name: Build Custom Bazzite ISO
-name: Build Custom Bazzite ISO
 on:
   push:
     branches:

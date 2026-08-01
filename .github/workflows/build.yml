@@ -1,9 +1,30 @@
-      - name: Build Custom Bazzite Image and ISO
+name: Build Custom Bazzite ISO
+on:
+  schedule:
+    - cron: "00 17 * * *" # Rebuilds automatically every day
+  push:
+    branches:
+      - main
+  workflow_dispatch: # Allows you to trigger it manually
+
+jobs:
+  bluebuild:
+    name: Build Custom Image and ISO
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+      id-token: write
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Build ISO via BlueBuild
         uses: blue-build/github-action@v1
         with:
-          recipe: 'recipe.yml'
+          recipe: 'Containerfile'
           cosign_private_key: ${{ secrets.SIGNING_SECRET }}
           
-          # TURN ON THE STANDALONE INSTALLER GENERATOR HERE
+          # Force the compiler to press your standalone installer file
           generate_iso: true
-          iso_name: 'nucbox-g5-custom-os-latest.iso'
+          iso_name: 'nucbox-g5-custom-bazzite-latest.iso'

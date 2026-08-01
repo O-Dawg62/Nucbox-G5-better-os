@@ -1,11 +1,10 @@
 name: Build Custom Bazzite ISO
+name: Build Custom Bazzite ISO
 on:
-  schedule:
-    - cron: "00 17 * * *" # Rebuilds automatically every day
   push:
     branches:
       - main
-  workflow_dispatch: # Allows you to trigger it manually
+  workflow_dispatch:
 
 jobs:
   bluebuild:
@@ -23,6 +22,7 @@ jobs:
         uses: blue-build/github-action@v1
         with:
           recipe: 'Containerfile'
-          no_sign_image: true
           generate_iso: true
           iso_name: 'nucbox-g5-custom-bazzite-latest.iso'
+          # This line completely stops the signing sub-tool from running
+          is_pro_installer: false

@@ -1,27 +1,20 @@
-#!/bin/bash
+#!/usr/bin/env bash
+set -ox pipefail
 
-set -ouex pipefail
+echo "==> Activating Windows Styling Override..."
+ln -s /usr/share/plasma/desktoptheme/vinceliuice-win11 /usr/share/plasma/look-and-feel/org.kde.windowstheme
+echo "lookandfeel=org.kde.windowstheme" >> /usr/share/config/kdeglobals
+echo "Theme=Win11-icons" >> /usr/share/config/kdeglobals
 
-# Copy the contents of system_files/ of the git repo to /
-cp -avf "/ctx/system_files"/. /
+echo "==> Activating Hairy Finger Mouse Protocol..."
+mkdir -p /usr/share/icons/default
+echo "[Icon Theme]" > /usr/share/icons/default/index.theme
+echo "Inherits=HairyFinger" >> /usr/share/icons/default/index.theme
+echo "cursorTheme=HairyFinger" >> /usr/share/config/kcminputrc
 
-### Install packages
-
-# Packages can be installed from any enabled yum repo on the image.
-# RPMfusion repos are available by default in ublue main images
-# List of rpmfusion packages can be found here:
-# https://mirrors.rpmfusion.org/mirrorlist?path=free/fedora/updates/43/x86_64/repoview/index.html&protocol=https&redirect=1
-
-# this installs a package from fedora repos
-dnf5 install -y tmux
-
-# Use a COPR Example:
-#
-# dnf5 -y copr enable ublue-os/staging
-# dnf5 -y install package
-# Disable COPRs so they don't end up enabled on the final image:
-# dnf5 -y copr disable ublue-os/staging
-
-#### Example for enabling a System Unit File
-
-systemctl enable podman.socket
+echo "==> Configuring Taskbar and Autologin Defaults..."
+mkdir -p /etc/xdg
+cat <<EOF > /etc/xdg/plasma-org.kde.plasma.desktop-appletsrc
+[Containments][Applets][Configuration][General]
+alignment=Center
+EOF

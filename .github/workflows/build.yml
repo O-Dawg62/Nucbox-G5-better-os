@@ -1,4 +1,4 @@
-name: Build Custom Bazzite ISO
+name: Build Custom Bazzite OS
 on:
   push:
     branches:
@@ -6,22 +6,25 @@ on:
   workflow_dispatch:
 
 jobs:
-  bluebuild:
-    name: Build Custom Image and ISO
+  build:
+    name: Build Image Layer
     runs-on: ubuntu-latest
     permissions:
       contents: read
       packages: write
-      id-token: write
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Build ISO via BlueBuild
-        uses: blue-build/github-action@v1
+      - name: Log in to GitHub Container Registry
+        uses: docker/login-action@v3
         with:
-          recipe: 'Containerfile'
-          generate_iso: true
-          iso_name: 'nucbox-g5-custom-bazzite-latest.iso'
-          # This line completely stops the signing sub-tool from running
-          is_pro_installer: false
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Build and Push Custom Image via Docker
+        run: |
+          docker build -t ghcr.io/${{ github.repository_owner }}/nucbox-g5-custom-bazzite:latest -f Containerfile .
+          docker push ghcr.io/${{ github.repository_owner }}/nucbox-g5-custom-bazzite:latest
+

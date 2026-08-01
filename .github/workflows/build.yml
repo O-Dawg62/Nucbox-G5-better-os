@@ -23,8 +23,6 @@ jobs:
         uses: blue-build/github-action@v1
         with:
           recipe: 'Containerfile'
-          cosign_private_key: ${{ secrets.SIGNING_SECRET }}
-          
-          # Force the compiler to press your standalone installer file
+          no_sign_image: true
           generate_iso: true
           iso_name: 'nucbox-g5-custom-bazzite-latest.iso'

@@ -1,1 +1,6 @@
-
+[Desktop Entry]
+Name=Win11-Style
+Comment=Windows Style desktop theme for custom console layout
+X-KDE-PluginInfo-Author=CustomBuild
+X-KDE-PluginInfo-Name=Win11-Style
+Type=Service
